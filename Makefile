@@ -1,13 +1,13 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++20 -Wall -Iheader   # <- include header folder
+CXXFLAGS = -std=c++20 -Wall -Ilib   # <- include lib folder
 LDFLAGS = -lreadline
 
 # Directory variables
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
-HDR_DIR = header
+HDR_DIR = lib
 
 # Find all .cpp source files in SRC_DIR
 SRC = $(wildcard $(SRC_DIR)/*.cpp)
@@ -25,7 +25,7 @@ TARGET = $(BIN_DIR)/myshell
 all: dirs organize checksrc $(TARGET)
 
 # Move stray .cpp files (from project root) into src/
-# Move stray headers (*.h, *.hpp) into header/
+# Move stray libs (*.h, *.hpp) into lib/
 organize:
 	@mkdir -p $(SRC_DIR) $(HDR_DIR)
 	@for f in *.cpp; do \

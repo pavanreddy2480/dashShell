@@ -24,6 +24,7 @@
 #include "signal.h"
 #include "commands.h"
 #include "io.h"
+#include "pipes.h"
 
 using namespace std;
 using namespace std;
@@ -38,11 +39,19 @@ void operate(string &shell_home,char* cwd){
     if(strcmp(input,"exit")==0){free(input);exit(0);}
 
     string line(input);free(input);
-    
+
     auto parsed = Parser::parse(line);
-    for(auto i:parsed){
-        if(!i.inputFile.size() && !i.outputFile.size()) customCommands::cmd(i.argv,cwd,shell_home);
-        IO::execute(i);
+    for(auto &i:parsed){
+        for(auto j:i.argv)cout<<j<<" ";
+        cout<<endl;
+    }
+    if (parsed.size() > 1) {
+        Pipes::run(parsed, cwd, shell_home);
+    } else if (!parsed.empty()) {
+        if (!parsed[0].inputFile.size() && !parsed[0].outputFile.size()) {
+            customCommands::cmd(parsed[0].argv, cwd, shell_home);
+        }
+        IO::execute(parsed[0]);
     }
 }
 

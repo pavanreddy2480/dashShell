@@ -9,10 +9,10 @@ using namespace std;
 
 void Pipes::run(const vector<Command>& cmds, char buff[], string home_dir) {
     int n = cmds.size();
-    int pipefds[2 * (n - 1)];
+    vector<int> pipefds(2 * (n - 1));
 
     for (int i = 0; i < n - 1; i++) {
-        if (pipe(pipefds + i*2) < 0) {
+        if (pipe(&pipefds[i*2]) < 0) {
             perror("pipe");
             return;
         }
@@ -22,17 +22,13 @@ void Pipes::run(const vector<Command>& cmds, char buff[], string home_dir) {
         pid_t pid = fork();
         if (pid == 0) {
             // setup input from previous pipe
-            if (i != 0) {
-                dup2(pipefds[(i-1)*2], STDIN_FILENO);
-            }
+            if (i != 0) dup2(pipefds[(i-1)*2], STDIN_FILENO);
 
             // setup output to next pipe
-            if (i != n-1) {
-                dup2(pipefds[i*2+1], STDOUT_FILENO);
-            }
+            if (i != n-1) dup2(pipefds[i*2+1], STDOUT_FILENO);
 
             // close all pipe fds
-            for (int j = 0; j < 2*(n-1); j++) close(pipefds[j]);
+            for (size_t j = 0; j < pipefds.size(); j++) close(pipefds[j]);
 
             // handle input redirection
             if (!cmds[i].inputFile.empty()) {
@@ -52,19 +48,25 @@ void Pipes::run(const vector<Command>& cmds, char buff[], string home_dir) {
             }
 
             // built-in or external command
+            // inside Pipes::run
             if (!cmds[i].argv.empty()) {
-                if (cmds[i].argv[0] == "cd" || cmds[i].argv[0] == "pwd" || cmds[i].argv[0] == "echo" ||
-                    cmds[i].argv[0] == "ls" || cmds[i].argv[0] == "pinfo" || cmds[i].argv[0] == "search") {
-                    // run built-ins directly
-                    customCommands::cmd(cmds[i].argv, buff, home_dir);
+                vector<string> args = cmds[i].argv;
+
+                // check for built-ins
+                if (args[0] == "cd" || args[0] == "pwd" || args[0] == "echo" ||
+                    args[0] == "ls" || args[0] == "pinfo" || args[0] == "search") {
+                    // run built-in
+                    customCommands::cmd(args, buff, home_dir);
                     exit(0);
                 } else {
-                    // external command
+                    // prepare args for execvp
                     vector<char*> argv;
-                    for (auto &arg : cmds[i].argv) argv.push_back(const_cast<char*>(arg.c_str()));
+                    for (auto &arg : args) argv.push_back(const_cast<char*>(arg.c_str()));
                     argv.push_back(nullptr);
+
+                    // execute external program
                     execvp(argv[0], argv.data());
-                    perror("execvp");
+                    perror("execvp failed");
                     exit(1);
                 }
             }
@@ -77,7 +79,7 @@ void Pipes::run(const vector<Command>& cmds, char buff[], string home_dir) {
     }
 
     // parent closes all pipes
-    for (int j = 0; j < 2*(n-1); j++) close(pipefds[j]);
+    for (size_t j = 0; j < pipefds.size(); j++) close(pipefds[j]);
 
     // wait for children
     for (int i = 0; i < n; i++) wait(NULL);

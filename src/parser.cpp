@@ -17,20 +17,13 @@ vector<Command> Parser::parse(const string &line) {
 
 Command Parser::parseCommand(const string &cmd){
     Command result;auto tokens=split_tokens(cmd);
-    cout<<"tokens : "<<endl;
     for(int i=0;i<tokens.size();i++){
-        cout<<tokens[i]<<" ";
         if(tokens[i]=="<"&&i+1<tokens.size()){result.inputFile=tokens[i+1];i++;}
         else if(tokens[i]==">"&&i+1<tokens.size()){result.outputFile=tokens[i+1];result.append=false;i++;}
         else if(tokens[i]==">>"&&i+1<tokens.size()){result.outputFile=tokens[i+1];result.append=true;i++;}
         else result.argv.push_back(tokens[i]);
 
     }
-    cout<<endl;
-    for(auto &i:result.argv) cout<<i<<" ";
-    cout<<endl;
-    cout<<result.inputFile<<endl;
-    cout<<result.outputFile<<endl;
     return result;
 }
 

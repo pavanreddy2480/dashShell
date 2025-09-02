@@ -3,15 +3,19 @@
 
 vector<Command> Parser::parse(const string &line) {
     vector<Command> commands;
+    stringstream ss(line);
+    string segment;
 
-    char *cstr=strdup(line.c_str());
-    char *cmd=strtok(cstr,"|");
-    while(cmd){
-        commands.push_back(parseCommand(string(cmd)));
-        cmd=strtok(NULL,"|");
+    while (getline(ss, segment, '|')) {
+        // trim leading/trailing whitespace
+        segment.erase(0, segment.find_first_not_of(" \t\n\r"));
+        segment.erase(segment.find_last_not_of(" \t\n\r") + 1);
+
+        if (!segment.empty()) {
+            commands.push_back(parseCommand(segment));
+        }
     }
 
-    free(cstr);
     return commands;
 }
 

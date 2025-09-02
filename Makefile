@@ -1,7 +1,11 @@
 # Compiler and flags
 CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Ilib   # <- include lib folder
-LDFLAGS = -lreadline
+CXXFLAGS = -std=c++20 -Wall \
+    -I/opt/homebrew/opt/readline/include \
+    -Ilib \
+    -DREADLINE_LIBRARY
+LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline -lncurses
 
 # Directory variables
 SRC_DIR = src

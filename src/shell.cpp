@@ -38,10 +38,10 @@ void operate(string &shell_home,char* cwd){
     if(strcmp(input,"exit")==0){free(input);exit(0);}
 
     string line(input);free(input);
-
+    
     auto parsed = Parser::parse(line);
     for(auto i:parsed){
-        customCommands::cmd(i.argv,cwd,shell_home);
+        if(!i.inputFile.size() && !i.outputFile.size()) customCommands::cmd(i.argv,cwd,shell_home);
         IO::execute(i);
     }
 }

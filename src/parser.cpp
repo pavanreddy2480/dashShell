@@ -1,21 +1,13 @@
 #include "parser.h"
 #include <cstring>
 
-vector<Command> Parser::parse(const string &line) {
-    vector<Command> commands;
-    stringstream ss(line);
-    string segment;
-
-    while (getline(ss, segment, '|')) {
-        // trim leading/trailing whitespace
-        segment.erase(0, segment.find_first_not_of(" \t\n\r"));
-        segment.erase(segment.find_last_not_of(" \t\n\r") + 1);
-
-        if (!segment.empty()) {
-            commands.push_back(parseCommand(segment));
-        }
+vector<Command>Parser::parse(const string&line){
+    vector<Command>commands;stringstream ss(line);string segment;
+    while(getline(ss,segment,'|')){
+        segment.erase(0,segment.find_first_not_of(" \t\n\r"));
+        segment.erase(segment.find_last_not_of(" \t\n\r")+1);
+        if(!segment.empty())commands.push_back(parseCommand(segment));
     }
-
     return commands;
 }
 

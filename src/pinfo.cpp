@@ -10,7 +10,7 @@
 
 using namespace std;
 
-long getMemory(pid_t pid){
+long getMemory(int pid){
     task_t task;
     if(task_for_pid(mach_task_self(),pid,&task)!=KERN_SUCCESS){
         return -1;

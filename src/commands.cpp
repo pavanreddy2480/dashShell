@@ -11,6 +11,11 @@
 
 using namespace std;
 
+bool customCommands::isBuiltin(const string& cmd) {
+    static const vector<string> builtins = {"pwd","exit","cd","echo","ls","pinfo","search"};
+    return find(builtins.begin(), builtins.end(), cmd) != builtins.end();
+}
+
 string customCommands::prevDir = "";
 void customCommands::cmd(vector<string>&s,char buff[],string home_dir){
     if(s.empty())return;

@@ -1,1 +1,8 @@
-what is this
+obj
+test
+bin
+Makefile
+input.txt
+lib
+output.txt
+src

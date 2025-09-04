@@ -17,7 +17,8 @@
 #include"io.h"
 #include"pipes.h"
 #include"auto.h"
-volatile pid_t killpid = -1;
+
+volatile int killpid = -1;
 
 using namespace std;
 
@@ -70,7 +71,6 @@ int main(){
     signal(SIGINT,signalHandler);
     signal(SIGTSTP,signalHandler);
     signal(SIGCHLD,signalHandler);
-
     setup_autocomplete();
 
     char cwd[1024];

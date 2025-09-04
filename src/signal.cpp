@@ -1,13 +1,13 @@
 #include <iostream>
 #include <unistd.h>     // must come first for kill()
 #include <signal.h>     // SIGINT, SIGTSTP, SIGCHLD
-#include <sys/types.h>  // pid_t
+#include <sys/types.h>  // int
 #include <sys/wait.h>   // waitpid, WNOHANG
 #include <iostream>
 #include "signal.h"
 #include <readline/readline.h>
 
-extern "C" int kill(pid_t, int);
+extern "C" int kill(int, int);
 
 using namespace std;
 
@@ -31,11 +31,11 @@ void signalHandler(int signum) {
             cout << "\n[Shell] Foreground process " << killpid << " stopped" << endl;
         }
     }
-    else if (signum == SIGCHLD) {
-        int status;
-        pid_t pid;
-        while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
-            cout << "[Shell] Child process " << pid << " terminated" << endl;
-        }
-    }
+    // else if (signum == SIGCHLD) {
+    //     int status;
+    //     int pid;
+    //     while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+    //         cout << "[Shell] Child process " << pid << " terminated" << endl;
+    //     }
+    // }
 }

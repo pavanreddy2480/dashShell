@@ -15,7 +15,7 @@ void Pipes::run(const vector<Command>&cmds,char buff[],string home_dir){
         if(pipe(fd[i])<0){perror("pipe");return;}
     }
     for(int i=0;i<n;i++){
-        pid_t pid=fork();
+        int pid=fork();
         if(pid==0){
             if(i!=0)dup2(fd[i-1][0],STDIN_FILENO);
             if(i!=n-1)dup2(fd[i][1],STDOUT_FILENO);
@@ -33,9 +33,10 @@ void Pipes::run(const vector<Command>&cmds,char buff[],string home_dir){
             }
             if(!cmds[i].argv.empty()){
                 vector<string>args=cmds[i].argv;
-                if(args[0]=="cd"||args[0]=="pwd"||args[0]=="echo"||args[0]=="ls"||args[0]=="pinfo"||args[0]=="search"){
+                if(customCommands::isBuiltin(args[0])){
                     customCommands::cmd(args,buff,home_dir);exit(0);
-                }else{
+                }
+                else{
                     vector<char*>argv;
                     for(auto&arg:args)argv.push_back(const_cast<char*>(arg.c_str()));
                     argv.push_back(nullptr);

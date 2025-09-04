@@ -29,7 +29,7 @@ void operate(string&shell_home,char*cwd){
     string prompt=buildPrompt(shell_home);
     char*input=readline(prompt.c_str());
     if(!input)exit(0);
-    // if(*input){add_history(input);history.add(input);}
+    if(*input){add_history(input);}
     string line(input);
     free(input);
     if(line=="exit"){
@@ -52,6 +52,7 @@ int main(){
     signal(SIGINT,signalHandler);
     signal(SIGTSTP,signalHandler);
     signal(SIGCHLD,signalHandler);
+    
     setup_autocomplete();
 
     char cwd[1024];
@@ -66,10 +67,11 @@ int main(){
  / _` |/ _` / __| '_ \ 
 | (_| | (_| \__ \ | | |
  \__,_|\__,_|___/_| |_|
+
     )"<<endl;
 
     read_history(history_file.c_str());
-    stifle_history(20);
+    // stifle_history(20);
 
     // for(int i=1;i<=history_length;i++){
     //     HIST_ENTRY*entry=history_get(i);

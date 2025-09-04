@@ -54,7 +54,8 @@ static vector<string> get_commands(const string& prefix) {
     return matches;
 }
 
-// ---------- Completion Generator ----------
+static int word_start = 0; // shared between my_completion and generator
+
 static char* completion_generator(const char* text, int state) {
     static vector<string> matches;
     static size_t match_index;
@@ -63,11 +64,11 @@ static char* completion_generator(const char* text, int state) {
         matches.clear();
         match_index = 0;
 
-        if (rl_point == 0) {
-            // Completing command
+        if (word_start == 0) {
+            // completing first word → command
             matches = get_commands(text);
         } else {
-            // Completing filename
+            // completing argument → filename
             matches = get_files(text);
         }
     }
@@ -79,9 +80,9 @@ static char* completion_generator(const char* text, int state) {
     }
 }
 
-// ---------- Readline Callback ----------
 char** my_completion(const char* text, int start, int end) {
-    rl_attempted_completion_over = 1; // disable default filename completion
+    rl_attempted_completion_over = 1;  // disable default filename completion
+    word_start = start;                // remember where word started
     return rl_completion_matches(text, completion_generator);
 }
 

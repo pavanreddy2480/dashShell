@@ -1,6 +1,5 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++20 -Wall -Ilib   # <- include lib folder
 CXXFLAGS = -std=c++20 -Wall \
     -I/opt/homebrew/opt/readline/include \
     -Ilib \

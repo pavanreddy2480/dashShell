@@ -33,7 +33,7 @@ void customCommands::cmd(vector<string>&s,char buff[],string home_dir){
         else{
             string arg=s[1];
             if(arg=="-"){if(prevDir.empty()){cout<<"No previous directory set\n";return;}targetDir=prevDir;}
-            else if(arg=="~")targetDir=home_dir;
+            else if(arg=="~"){targetDir=string(getenv("HOME"));}
             else if(arg==".")return;
             else targetDir=arg;
         }

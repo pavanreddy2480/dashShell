@@ -8,9 +8,7 @@
 #include <iostream>
 using namespace std;
 
-void LS::run(const vector<string>& args){
-    LS ls;ls.ls(args);
-}
+void LS::run(const vector<string>& args){LS ls;ls.ls(args);}
 
 string LS::getPermissions(mode_t mode){
     string perms;

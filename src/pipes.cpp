@@ -33,9 +33,7 @@ void Pipes::run(const vector<Command>&cmds,char buff[],string home_dir){
             }
             if(!cmds[i].argv.empty()){
                 vector<string>args=cmds[i].argv;
-                if(customCommands::isBuiltin(args[0])){
-                    customCommands::cmd(args,buff,home_dir);exit(0);
-                }
+                if(customCommands::isBuiltin(args[0])){customCommands::cmd(args,buff,home_dir);exit(0);}
                 else{
                     vector<char*>argv;
                     for(auto&arg:args)argv.push_back(const_cast<char*>(arg.c_str()));

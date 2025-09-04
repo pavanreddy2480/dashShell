@@ -19,21 +19,12 @@ bool customCommands::isBuiltin(const string& cmd) {
 string customCommands::prevDir = "";
 void customCommands::cmd(vector<string>&s,char buff[],string home_dir){
     if(s.empty())return;
-    if(s[0]=="pwd"){
-        if(getcwd(buff,1000)){
-            cout<<buff<<endl;
-        }
-    }
-    else if(s[0]=="exit"){
-        cout<<"Shell is going to exit\n";exit(0);
-    }
+    if(s[0]=="pwd"){if(getcwd(buff,1000))cout<<buff<<endl;}
+    else if(s[0]=="exit"){cout<<"Shell is going to exit\n";exit(0);}
     else if(s[0]=="cd"){
         if(s.size()>2){cout<<"Invalid arguments\n";return;}
         string targetDir;
-        if(s.size()==1){
-            char*home=getenv("HOME");
-            targetDir=home?home:"/";
-        }
+        if(s.size()==1){char*home=getenv("HOME");targetDir=home;}
         else{
             string arg=s[1];
             if(arg=="-"){if(prevDir.empty()){cout<<"No previous directory set\n";return;}targetDir=prevDir;}

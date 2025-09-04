@@ -13,16 +13,10 @@ static bool doSearch(const string& dir,const string& target){
     while((ent=readdir(dp))!=nullptr){
         string entryName=ent->d_name;
         if(entryName=="."||entryName=="..") continue;
-        if(entryName==target){
-            closedir(dp);
-            return true;
-        }
+        if(entryName==target){closedir(dp);return true;}
         if(ent->d_type==DT_DIR){
             string subPath=dir+"/"+entryName;
-            if(doSearch(subPath,target)){
-                closedir(dp);
-                return true;
-            }
+            if(doSearch(subPath,target)){closedir(dp);return true;}
         }
     }
     closedir(dp);
@@ -30,10 +24,7 @@ static bool doSearch(const string& dir,const string& target){
 }
 
 void SEARCH::handleSearch(const vector<string>& args){
-    if(args.size()!=2){
-        cerr<<"Usage: search <filename_or_folder>"<<endl;
-        return;
-    }
+    if(args.size()!=2){cerr<<"Usage: search <filename_or_folder>"<<endl;return;}
     string target=args[1];
     cout<<(doSearch(".",target)?"True":"False")<<endl;
 }

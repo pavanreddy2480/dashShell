@@ -12,10 +12,7 @@ void IO::execute(const Command& cmd){
     if(!(cmd.inputFile.size()||cmd.outputFile.size())) return;
 
     int pid=fork();
-    if(pid<0){
-        perror("fork failed");
-        return;
-    }
+    if(pid<0){perror("fork failed");return;}
     if(pid==0){
         if(!cmd.inputFile.empty()){
             int fd=open(cmd.inputFile.c_str(),O_RDONLY);

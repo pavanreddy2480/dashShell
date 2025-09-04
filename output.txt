@@ -1,8 +1,4 @@
-obj
-test
-bin
-Makefile
-input.txt
-lib
-output.txt
-src
+pid -- 28540
+Process Status -- Sleeping+
+memory -- 999424 bytes (Resident Memory)
+Executable Path -- ~/code/IIIT/AOS/AS-2/bin/myshell

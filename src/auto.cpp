@@ -11,57 +11,57 @@
 #include<readline/history.h>
 using namespace std;
 
-static vector<string>get_files(const string&prefix){
-    vector<string>matches;
-    DIR*dir=opendir(".");
-    if(!dir)return matches;
-    struct dirent*entry;
-    while((entry=readdir(dir))!=NULL){
-        string name(entry->d_name);
-        if(name.rfind(prefix,0)==0)matches.push_back(name);
-    }
-    closedir(dir);
-    return matches;
-}
-
-static vector<string>get_commands(const string&prefix){
-    vector<string>matches;
-    char*path=getenv("PATH");
-    if(!path)return matches;
-    string pathStr(path);stringstream ss(pathStr);string dirPath;
-    while(getline(ss,dirPath,':')){
-        DIR*dir=opendir(dirPath.c_str());
-        if(!dir)continue;
-        struct dirent*entry;
-        while((entry=readdir(dir))!=NULL){
-            string name(entry->d_name);
-            if(name.rfind(prefix,0)==0)matches.push_back(name);
+static vector<string>collectMatches(const string&prefix,bool searchPath){
+    vector<string>results;
+    if(searchPath){
+        char*pathEnv=getenv("PATH");
+        if(!pathEnv) return results;
+        string pathStr(pathEnv);
+        stringstream ss(pathStr);
+        string dir;
+        while(getline(ss,dir,':')){
+            DIR*dp=opendir(dir.c_str());
+            if(!dp) continue;
+            struct dirent*ent;
+            while((ent=readdir(dp))!=NULL){
+                string name(ent->d_name);
+                if(name.rfind(prefix,0)==0) results.push_back(name);
+            }
+            closedir(dp);
         }
-        closedir(dir);
+    }else{
+        DIR*dp=opendir(".");
+        if(!dp) return results;
+        struct dirent*ent;
+        while((ent=readdir(dp))!=NULL){
+            string name(ent->d_name);
+            if(name.rfind(prefix,0)==0) results.push_back(name);
+        }
+        closedir(dp);
     }
-    return matches;
+    return results;
 }
 
-static int word_start=0;
+static int startPos=0;
 
-static char*completion_generator(const char*text,int state){
-    static vector<string>matches;
-    static size_t match_index;
+static char*completionGenerator(const char*text,int state){
+    static vector<string>candidates;
+    static size_t idx;
     if(state==0){
-        matches.clear();match_index=0;
-        if(word_start==0)matches=get_commands(text);
-        else matches=get_files(text);
+        candidates.clear();
+        idx=0;
+        candidates=collectMatches(text,startPos==0);
     }
-    if(match_index<matches.size())return strdup(matches[match_index++].c_str());
-    else return NULL;
+    if(idx<candidates.size()) return strdup(candidates[idx++].c_str());
+    return NULL;
 }
 
-char**my_completion(const char*text,int start,int end){
+char**myCompletion(const char*text,int start,int end){
     rl_attempted_completion_over=1;
-    word_start=start;
-    return rl_completion_matches(text,completion_generator);
+    startPos=start;
+    return rl_completion_matches(text,completionGenerator);
 }
 
-void setup_autocomplete(){
-    rl_attempted_completion_function=my_completion;
+void setupAutocomplete(){
+    rl_attempted_completion_function=myCompletion;
 }

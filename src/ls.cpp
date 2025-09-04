@@ -8,11 +8,11 @@
 #include <iostream>
 using namespace std;
 
-void MyLS::run(const vector<string>& args){
-    MyLS ls;ls.my_ls(args);
+void LS::run(const vector<string>& args){
+    LS ls;ls.ls(args);
 }
 
-string MyLS::getPermissions(mode_t mode){
+string LS::getPermissions(mode_t mode){
     string perms;
     if(S_ISREG(mode))perms+="-";
     else if(S_ISDIR(mode))perms+="d";
@@ -30,7 +30,7 @@ string MyLS::getPermissions(mode_t mode){
     return perms;
 }
 
-void MyLS::listFile(const string& path,bool showAll,bool longFmt){
+void LS::listFile(const string& path,bool showAll,bool longFmt){
     struct stat st;
     if(stat(path.c_str(),&st)==-1){perror("stat");return;}
     string name=path;size_t pos=path.find_last_of('/');
@@ -50,7 +50,7 @@ void MyLS::listFile(const string& path,bool showAll,bool longFmt){
     }
 }
 
-void MyLS::listDir(const string& dir,bool showAll,bool longFmt){
+void LS::listDir(const string& dir,bool showAll,bool longFmt){
     auto dp=opendir(dir.c_str());
     if(!dp){perror(("ls: cannot access "+dir).c_str());return;}
     struct dirent* entry;
@@ -63,7 +63,7 @@ void MyLS::listDir(const string& dir,bool showAll,bool longFmt){
     closedir(dp);
 }
 
-void MyLS::my_ls(const vector<string>& args){
+void LS::ls(const vector<string>& args){
     bool showAll=false,longFmt=false;vector<string>paths;
     for(size_t j=1;j<args.size();j++){
         const auto& arg=args[j];

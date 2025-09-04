@@ -4,7 +4,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void setup_autocomplete();
+void setupAutocomplete();
 
 char** my_completion(const char* text, int start, int end);
 

@@ -6,26 +6,26 @@
 #include <unistd.h>
 using namespace std;
 
-bool searchRecursive(const string& dir,const string& target){
-    DIR* d=opendir(dir.c_str());
-    if(!d) return false;
-    struct dirent* entry;
-    while((entry=readdir(d))!=nullptr){
-        string name=entry->d_name;
-        if(name=="."||name=="..") continue;
-        if(name==target){
-            closedir(d);
+static bool doSearch(const string& dir,const string& target){
+    DIR* dp=opendir(dir.c_str());
+    if(!dp) return false;
+    struct dirent* ent;
+    while((ent=readdir(dp))!=nullptr){
+        string entryName=ent->d_name;
+        if(entryName=="."||entryName=="..") continue;
+        if(entryName==target){
+            closedir(dp);
             return true;
         }
-        if(entry->d_type==DT_DIR){
-            string subdir=dir+"/"+name;
-            if(searchRecursive(subdir,target)){
-                closedir(d);
+        if(ent->d_type==DT_DIR){
+            string subPath=dir+"/"+entryName;
+            if(doSearch(subPath,target)){
+                closedir(dp);
                 return true;
             }
         }
     }
-    closedir(d);
+    closedir(dp);
     return false;
 }
 
@@ -35,6 +35,5 @@ void SEARCH::handleSearch(const vector<string>& args){
         return;
     }
     string target=args[1];
-    if(searchRecursive(".",target)) cout<<"True"<<endl;
-    else cout<<"False"<<endl;
+    cout<<(doSearch(".",target)?"True":"False")<<endl;
 }

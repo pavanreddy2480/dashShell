@@ -71,7 +71,7 @@ int main(){
     signal(SIGINT,signalHandler);
     signal(SIGTSTP,signalHandler);
     signal(SIGCHLD,signalHandler);
-    setup_autocomplete();
+    setupAutocomplete();
 
     char cwd[1024];
     getcwd(cwd,sizeof(cwd));

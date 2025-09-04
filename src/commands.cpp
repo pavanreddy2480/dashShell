@@ -49,7 +49,7 @@ void customCommands::cmd(vector<string>&s,char buff[],string home_dir){
         for(size_t i=1;i<s.size();i++){cout<<s[i];if(i!=s.size()-1)cout<<" ";}
         cout<<endl;
     }
-    else if(s[0]=="ls")MyLS::run(s);
+    else if(s[0]=="ls")LS::run(s);
     else if(s[0]=="pinfo")PINFO::handlePinfo(s);
     else if(s[0]=="search")SEARCH::handleSearch(s);
     else SYSCMD::executeCommand(s);

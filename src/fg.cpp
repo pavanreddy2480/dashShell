@@ -27,7 +27,7 @@ void SYSCMD::executeCommand(vector<string>& args) {
     }
     else{
         if(background){
-            cout<<"Started background process with PID: "<<pid<<endl;
+            cout<<"Background process with PID: "<<pid<<endl;
         }
         else{
             killpid=pid;

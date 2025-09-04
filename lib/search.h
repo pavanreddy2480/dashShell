@@ -1,8 +1,9 @@
 #ifndef SEARCH_HPP
 #define SEARCH_HPP
 
-#include <bits/stdc++.h>
-#include <filesystem>
+#include <vector>
+#include <string>
+#include <iostream>
 
 class SEARCH {
 public:

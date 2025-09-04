@@ -17,13 +17,10 @@
 #include"io.h"
 #include"pipes.h"
 #include"auto.h"
-// #include"history.h"
 volatile pid_t killpid = -1;
 
 using namespace std;
 
-
-// History history;
 
 string history_file;
 
@@ -39,7 +36,7 @@ void operate(string&shell_home,char*cwd){
     }
 
     if(line.rfind("history",0)==0){
-        int num=20;string cmd;
+        int num=10;string cmd;
         istringstream iss(line);
         iss>>cmd;
         if(iss>>num){}
@@ -73,7 +70,6 @@ int main(){
     signal(SIGINT,signalHandler);
     signal(SIGTSTP,signalHandler);
     signal(SIGCHLD,signalHandler);
-    // signal(SIGTSTP, SIG_IGN);
 
     setup_autocomplete();
 

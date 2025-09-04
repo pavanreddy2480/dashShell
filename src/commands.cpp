@@ -16,7 +16,6 @@ void customCommands::cmd(vector<string>&s,char buff[],string home_dir){
     if(s.empty())return;
     if(s[0]=="pwd"){
         if(getcwd(buff,1000)){
-            // if(string(buff)==home_dir)cout<<"~\n";
             cout<<buff<<endl;
         }
     }

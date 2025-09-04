@@ -1,19 +1,41 @@
-#include "signal.h"
 #include <iostream>
-#include <csignal>   // for SIGINT, SIGTSTP, SIGCHLD
-#include <cstdlib>   // for exit()
+#include <unistd.h>     // must come first for kill()
+#include <signal.h>     // SIGINT, SIGTSTP, SIGCHLD
+#include <sys/types.h>  // pid_t
+#include <sys/wait.h>   // waitpid, WNOHANG
+#include <iostream>
+#include "signal.h"
+#include <readline/readline.h>
+
+extern "C" int kill(pid_t, int);
 
 using namespace std;
 
 void signalHandler(int signum) {
     if (signum == SIGINT) {
-        cout << "\nINTERRUPT SIGNAL (SIGINT) RECEIVED" << endl;
+        if (killpid > 0) {
+            kill(killpid, SIGINT);
+            cout << "\n[Shell] Foreground process " << killpid << " interrupted" << endl;
+        }
+        else {
+            // No child: just reset the line
+            cout << "\n"; 
+            rl_on_new_line();   // from readline
+            rl_replace_line("", 0);
+            rl_redisplay();
+        }
     }
     else if (signum == SIGTSTP) {
-        cout << "\nSTOP SIGNAL (SIGTSTP) RECEIVED - exiting..." << endl;
-        exit(signum);
+        if (killpid > 0) {
+            kill(killpid, SIGTSTP);
+            cout << "\n[Shell] Foreground process " << killpid << " stopped" << endl;
+        }
     }
     else if (signum == SIGCHLD) {
-        cout << "\nCHILD PROCESS TERMINATED (SIGCHLD)" << endl;
+        int status;
+        pid_t pid;
+        while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+            cout << "[Shell] Child process " << pid << " terminated" << endl;
+        }
     }
 }

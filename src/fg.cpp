@@ -1,5 +1,7 @@
 #include "fg.h"
+#include "signal.h"
 using namespace std;
+
 
 void SYSCMD::executeCommand(vector<string>& args) {
     if(args.empty()) return;
@@ -28,8 +30,10 @@ void SYSCMD::executeCommand(vector<string>& args) {
             cout<<"Started background process with PID: "<<pid<<endl;
         }
         else{
+            killpid=pid;
             int status;
-            waitpid(pid,&status,0);
+            waitpid(pid, &status, WUNTRACED);
+            killpid=-1;
         }
     }
 }

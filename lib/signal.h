@@ -3,7 +3,7 @@
 
 #include <sys/types.h>
 
-extern volatile int killpid;  // declaration
+extern volatile int killpid;
 
 void signalHandler(int signum);
 

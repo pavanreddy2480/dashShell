@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include "signal.h"
+
 using namespace std;
 
 void IO::execute(const Command& cmd){
@@ -44,7 +46,9 @@ void IO::execute(const Command& cmd){
         }
     }
     else{
+        killpid=pid;
         int status;
-        waitpid(pid,&status,0);
+        waitpid(pid,&status,WUNTRACED);
+        killpid=-1;
     }
 }

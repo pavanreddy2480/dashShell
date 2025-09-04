@@ -10,4 +10,4 @@ public:
     static void handleSearch(const std::vector<std::string>& args);
 };
 
-#endif // SEARCH_HPP
+#endif

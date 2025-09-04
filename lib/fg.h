@@ -11,4 +11,4 @@ public:
     static void executeCommand(std::vector<std::string> &args);
 };
 
-#endif // SYSCMD_HPP
+#endif

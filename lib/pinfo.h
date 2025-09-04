@@ -12,4 +12,4 @@ public:
     static void handlePinfo(const std::vector<std::string> &s);
 };
 
-#endif // PINFO_HPP
+#endif
